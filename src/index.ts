@@ -1,22 +1,36 @@
+import express from "express";
 import { PrismaClient } from "@prisma/client";
 
+const app = express();
 const client = new PrismaClient();
 
-async function createUser() {
-  await client.user.create({
-    data: {
-      username: "yogesh rand",
-      password: "123456",
-      age: 35,
-      city: "delhi",
-    },
-  });
+app.get("/users",async(req,res)=>{
+  const users  = await client.user.findMany();
+  res.json({
+    users
+  })
+})
 
-  console.log("User created");
-}
+app.get("/todos/:id",async(req,res)=>{
+  const id = req.params.id;
 
-createUser()
-  .catch(console.error)
-  .finally(async () => {
-    await client.$disconnect();
-  });
+  const user = await client.user.findFirst({
+    where:{
+      id: parseInt(id)
+  },
+    select :{
+      todos:true,
+      username: true,
+      password: true,
+    }
+  })
+  res.json({
+    user
+  })
+})
+
+app.listen(3000,()=>{
+  console.log("server running at port 3000");
+});
+
+// I GOT ISP ERROR HERE SO REMEMBER IT
