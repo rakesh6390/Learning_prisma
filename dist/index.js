@@ -6,9 +6,14 @@ async function createUser() {
             username: "yogesh rand",
             password: "123456",
             age: 35,
-            city: "delhi"
-        }
+            city: "delhi",
+        },
     });
+    console.log("User created");
 }
-createUser();
+createUser()
+    .catch(console.error)
+    .finally(async () => {
+    await client.$disconnect();
+});
 //# sourceMappingURL=index.js.map
